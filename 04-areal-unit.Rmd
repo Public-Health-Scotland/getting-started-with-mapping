@@ -1,0 +1,213 @@
+# Areal Unit Data
+
+This section will focus on mapping areal unit variable, where we have a variable of interest that we want to display for each region of interest. For this section we will look at building a map of SIMD quintile across the Lothian Health Board. In order to do this we will need to:
+
+- Read in the spatial information using the function `read_sf()` from the `{sf}` package
+
+- Read in the data that we want to plot using the `{readr}` package (or a relevant package for reading in your data file)
+
+- Join with a standard data set, and filter using functions from the `{dplyr}` package
+
+- Produce maps using either the `{ggplot2}` package, or the `{leaflet}` package
+
+We'll start by loading all of these packages - remember if you are only using `{ggplot2}` you don't need to load `{leaflet}` and similarly if you are only using `{leaflet}` you don't need to load `{ggplot2}`.
+
+```{r}
+library(sf)      # reading in the spatial information
+library(readr)   # reading in data (this may change depending on file type)
+library(dplyr)   # manipulating the data
+library(ggplot2) # plotting a static map
+library(leaflet) # plotting an interactive map
+```
+
+
+## Reading in Shapefiles
+
+The spatial information about the regions that you are trying to plot is contained within the shape files. This is a collection of files all with the same name and different file extensions that contain information on the regions, and how they should be plotted. For R you only need three of these files with the extensions `.shp`, `.dbf`, and `.shx`. Each of these serves a particular function:
+
+- The `.shp` file (shape file) contains information on the boundaries of the regions. Specifically this is a collection of sets of coordinates that make up the boundary.
+
+- The `.dbf` file (database file) contains data that relate to the boundaries. This can include multiple different variables, but at a minimum must contain a column with region IDs. Usually this file will also contain information on things like the region areas, though these typically are not used.
+
+- The `.shx` file (shape index file) contains indexing information that allows the information in the shape file to be linked to the data in the database file. It also has implications on plotting order (though this usually isn't particularly important).
+
+Since these files are all linked, they are read in together using the function `read_sf()`, where the only argument is the file path for the `.shp` file. The code below reads in information on data zone boundaries and names the resulting object `spat`:
+
+```{r}
+path <- "/conf/linkage/output/lookups/Unicode/Geography/Shapefiles/Data Zones 2011/"
+
+spat <- read_sf(paste0(path, "SG_DataZone_Bdry_2011.shp"))
+```
+
+When you read this in, you should notice that it appears to be exactly the same as any other data frame in R. It pretty much is, which means that you can join, and filter and manipulate the data in `spat` in exactly the same way as any other data frame. The thing that makes `spat` spatial is that is has a special column called `GEOMETRY` which contains objects that are `POLYGON` or `MULTIPOLYGON` types defining the region associated with each observation.
+
+## Joining with data
+
+The next step is to read in the SIMD information - this step is exactly the same as it normally would be. The information in this case is stored in a `.rds` file, so we will make use of the function `read_rds()` from the readr package. The column `Datazone2011` is being renamed to `DataZone` to match the column name in the spatial information.
+
+```{r}
+data_path <- "/conf/linkage/output/lookups/Unicode/Deprivation/"
+
+SIMD <- read_rds(paste0(data_path, "DataZone2011_domain_level_simd.rds")) %>% 
+  rename(DataZone = Datazone2011)
+```
+
+Now that we have all of the information required to map, we need to join the two data sets. We do this in the usual way using one of the `join` functions from `{dplyr}`. One important note here is that the object containing the spatial information *must* be the first argument in your join function, if it isn't your resulting data will not have spatial characteristics:
+
+```{r}
+class(left_join(SIMD, spat))
+
+class(left_join(spat, SIMD))
+```
+
+You can see that the class of the combination of `SIMD` and `spat` does not have the characteristic `sf` while the class of the combination `spat` and `SIMD` retains this characteristic.
+
+Since we are only interested in plotting over regions in the Lothian health board, we should also filter these out. We can do this as usual using the `filter()` function from `{dplyr}`. So obtaining our joined and filtered data set as follows:
+
+```{r}
+
+SIMD_map <- spat %>% 
+  left_join(SIMD) %>% 
+  filter(hb2019name == "NHS Lothian")
+
+```
+Now that we have the data joined and filtered appropriately, we can start producing maps.
+
+## `{ggplot2}`
+
+To produce a map in `ggplot2` with any spatial data (including point data) we use the geometry function `geom_sf()`, within which we can specify aesthetics like `fill` and `colour` to represent observations. So, to map SIMD quintile, which is represented by the column `simd202_11`:
+
+```{r}
+
+ggplot(SIMD_map) +
+  geom_sf(aes(fill = simd202_11))
+
+```
+
+This is fine, but we can customise it a bit more by changing the colour scale, and naming the fill scale more appropriately. To help to visualise the small regions, I'll also set the border colour to be set according to SIMD. Maps also usually look nicer when they are presented using `theme_void()` (although this is up to your own personal preference!):
+
+```{r}
+
+ggplot(SIMD_map) +
+  geom_sf(aes(fill = simd202_11, colour = simd202_11)) +
+  scale_fill_viridis_c("SIMD Quintile", option = "C", aesthetics = c("fill", "colour")) +
+  theme_void()
+
+```
+
+Although this map is static, we can use `ggplotly()` to introduce a small amount of interactivity. The column has been renamed to improve the labels, and tooltip has been specified to reduce duplication. There is also a dummy aesthetic `DZ` which allows us to show the data zone name:
+
+```{r}
+p <- SIMD_map %>% 
+  rename(`SIMD Quintile` = simd202_11) %>% 
+  ggplot() +
+  geom_sf(aes(fill = `SIMD Quintile`, colour = `SIMD Quintile`, DZ = DataZone)) +
+  scale_fill_viridis_c("SIMD Quintile", option = "C", aesthetics = c("fill", "colour")) +
+  theme_void()
+plotly::ggplotly(p, tooltip = c("DZ", "fill"))
+```
+
+## `{leaflet}`
+
+Leaflet produces interactive maps, that are set on top of a base tile. The base tile shows the underlying area, making it great for areal unit maps, but even more effective for point maps. There is added functionality in Leaflet that will allow you to add multiple layers to you plot which means that you can have layers show and vanish as needed. 
+
+Leaflet requires that your spatial information be coded as latitude/longitude, so we implement that using the function `st_transform()` from the `{sf}` package as follows:
+
+```{r}
+SIMD_map <- st_transform(SIMD_map, 4326)
+```
+
+For the purposes of getting started, we will focus on a single layer with an on/off toggle. We always start by calling `leaflet()`, and then adding our base tile:  
+
+```{r}
+leaflet() %>% 
+  addProviderTiles("OpenStreetMap.Mapnik")
+```
+
+This looks odd at the moment, but once we add data, the map will automatically focus on the appropriate area. If we just want to add the regions themselves with no data, we can do that directly using the function `addPolygons()`. the argument `popup` allows us to specify what displays when we click on a particular region. 
+
+```{r}
+leaflet(SIMD_map) %>% 
+  addProviderTiles("OpenStreetMap.Mapnik") %>% 
+  addPolygons(popup = ~paste0("Datazone: ", DataZone))
+```
+
+We can customise the outline and fill using various arguments to `addPolygons()`. The arguments `color` and `weight` control the outlines, and `fillColor` controls the fill colour.
+
+```{r}
+leaflet(SIMD_map) %>% 
+  addProviderTiles("OpenStreetMap.Mapnik") %>% 
+  addPolygons(popup = ~paste0("Datazone: ", DataZone), 
+              color = "black",
+              weight = 0.5,
+              fillColor = "red")
+```
+
+If we want the fill colour to vary depending on the SIMD value, we have to first create a palette to use. The easiest way to do this is to use the `colorNumeric()` function for a numeric value (there is also `colorFactor()` for categorical data):
+
+```{r}
+pal <- colorNumeric("magma", SIMD_map$simd202_11)
+```
+
+Then we use this palette to specify the fill colour within `addPolygons()`. The opacity has also been increased to make the colours more visible, and the popup is updated to include the SIMD quintile (note that this uses HTML, where `<br>` denotes new line. We add a legend using `addLegend()` and specifying the palette (note that we haven't specified the data within `addLegend()` so we have to use the dollar notation `SIMD_map$202_11`).
+
+```{r}
+leaflet(SIMD_map) %>% 
+  addProviderTiles("OpenStreetMap.Mapnik") %>% 
+  addPolygons(popup = ~paste0("Datazone: ", DataZone, "<br>SIMD Quintile: ", simd202_11), 
+              color = "black",
+              weight = 0.5,
+              fillColor = ~pal(simd202_11),
+              fillOpacity = 0.8) %>% 
+  addLegend(pal = pal, position = "bottomleft", values = SIMD_map$simd202_11)
+```
+
+Finally, let's add another layer containing SIMD decile (column `simd202_10`) plus a toggle to switch between quintile and decile. We need a few things here:
+
+- An additional palette for the decile values
+- An additional legend for the decile values
+- An additional set of polygons for the decile values
+- Group names set within `addPolygons()` for each of quintile and decile
+- A control to toggle between the layers
+
+We do this by setting up a `group` within `addPolygons()`, and then using `addLayersControl()` to add the switch to the plot. 
+
+```{r}
+# Process for creating palette is exactly the same, just different column
+pal_quin <- colorNumeric("magma", SIMD_map$simd202_11)
+pal_dec <- colorNumeric("magma", SIMD_map$simd202_10)
+
+leaflet(SIMD_map) %>% 
+  addProviderTiles("OpenStreetMap.Mapnik") %>% 
+  # Polygons for quintiles
+  addPolygons(popup = ~paste0("Datazone: ", DataZone, "<br>SIMD Quintile: ", simd202_11), 
+              color = "black",
+              weight = 0.5,
+              fillColor = ~pal_quin(simd202_11),
+              fillOpacity = 0.8,
+              group = "SIMD Quintile") %>% 
+  # Polygons for deciles
+  addPolygons(popup = ~paste0("Datazone: ", DataZone, "<br>SIMD Decile: ", simd202_10), 
+              color = "black",
+              weight = 0.5,
+              fillColor = ~pal_dec(simd202_10),
+              fillOpacity = 0.8,
+              group = "SIMD Decile") %>% 
+  addLegend(pal = pal_quin, 
+            position = "bottomleft", 
+            values = SIMD_map$simd202_11,
+            group = "SIMD Quintile",
+            title = "SIMD Quintile") %>% 
+  addLegend(pal = pal_dec, 
+            position = "bottomright", 
+            values = SIMD_map$simd202_10,
+            group = "SIMD Decile",
+            title = "SIMD Decile") %>% 
+  addLayersControl(
+    # Groups will show in order they are set here
+    baseGroups = c("SIMD Quintile", "SIMD Decile"),
+    position = "topright",
+    # set collapsed = FALSE so that controls always displayed
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```

@@ -1,0 +1,56 @@
+# Introduction to Geospatial Analysis
+
+The term Geospatial analysis applies where we are interested in exploring data that relate to particular spatial locations. These locations may be single point locations, such as the coordinate locations of hospitals, GP practices, patients' homes. The location may also relate to administrative regions, such as health boards, health and social care partnerships, localities, data zones.
+
+## Terminology
+
+This section will outline some of the key terminology that will be used throughout this guide.
+
+### Types of Spatial Data
+
+There are two commonly used types of spatial information that you are likely to encounter. These are *areal unit data* and *spatial point data*. Each of these is described below. 
+
+#### Areal Unit Data
+
+*Areal unit data* is data that relates to specific regions combined with spatial information about the regions (e.g. rate of hospital admissions per 1,000 population for each health board in Scotland along with information on the boundaries of the region). This type of spatial data is usually supported by shape files. 
+
+*Shape files* are a set of files that contain information on a particular spatial region, particularly coordinates which represent the boundary (or, where there is a collection of regions, boundaries) of an area. 
+
+Typically we would produce maps of areal unit data in two circumstances:
+
+1. When we are interested in comparing measurements or observations of data across a large number of regions (where the number of regions is more than should be sensibly displayed on a bar chart), 
+
+2. Where we are interested in the spatial pattern as a whole. 
+
+For the second type of analysis we might be thinking about answering questions such as:
+
+- Are there clusters of areas that are close to each other that have similar observations?
+
+- Are there neighbouring areas where there is a large difference in observations?
+
+- Is there a general trend in observations across the surface? (This can include simple trends like increasing from south to north, but may involve more complex trends like urban vs rural areas.)
+
+#### Spatial Point Data
+
+Spatial point data can be characterised in two ways depending on what our main focus is.
+
+When we talk about *geostatistical data*, this indicates that we are mainly interested in the observation associated with a particular point location, rather than the location itself. An example of this might be weather measurements, where the location is important in building up a picture of the weather over a space, but we are mostly interested in the level of rainfall in a particular location. Usually with this type of data we would be aiming to create a smooth estimate of the measurement across the entire area of interest - so instead of having rainfall at individual weather stations, we would get an estimate of rainfall for all locations in Scotland.
+
+When we talk about *point process data*, this indicates that our primary focus is on the location itself. This type of data would be considered where we are interested in the location of services, or the location of cases of a particular disease. **Include John Snow Cholera example?**
+
+### Coordinate Reference Systems
+
+Coordinate reference systems are used to represent single point locations. Two commonly used coordinate systems in the UK are:
+
+- *easting, northing* - this is the [coordinate system recommended by the UK government](https://www.gov.uk/guidance/uk-geospatial-data-standards-coordinate-reference-systems) for representing spatial data based on the British National Grid. Since the UK is such a small area in relation to the Earth as a whole this coordinate system represents locations in the UK on a flat grid. This will usually be the coordinate system used in any shape files produced by the UK government.
+
+- *longitude, latitude* - this coordinate system is used globally and defines a point by its distance in degrees from the central lines on the Earth. Longitude is the "x" coordinate - it is the distance from the prime meridian which cuts the Earth in half vertically. Latitude is the "y" coordinate - which is the distance from the equator, which cuts the earth in half horizontally.
+
+It is important to be aware of which coordinate reference system you are using, as some tools will only work with specific types which will lead to errors or unusual output if you use the wrong system. For use in R, we will transform our data into longitude/latitude for consistency.
+
+## Mapping Tools
+
+There are several tools that can be used to access, manipulate and map spatial data. These range from Graphical Information Systems (GIS), to programming languages such as R and Python when supported by an appropriate spatial package. Power BI also has mapping capabilities, supported by Bing. 
+
+This guide will focus on how to create maps using Posit, supported by the packages `{sf}` and `{ggplot2}` for non-interactive maps, and `{leaflet}` for interactive mapping. **Is this true? - is there anyone else who could do something similar for GIS or Power BI?**
+

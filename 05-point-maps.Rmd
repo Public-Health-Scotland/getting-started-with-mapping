@@ -1,0 +1,2 @@
+# Spatial Point Maps in `{leaflet}`
+
