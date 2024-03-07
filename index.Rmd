@@ -13,7 +13,7 @@ link-citations: yes
 ---
 
 ```{r include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.path = "./imgs/")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 

@@ -1,2 +1,115 @@
 # Spatial Point Maps in `{leaflet}`
 
+Creating spatial point maps in `{leaflet}` follows a very similar process to creating areal unit maps. To demonstrate the process, we are going to plot GP surgeries in the Ayrshire and Arran health board. [A link to the GP surgeries list from January 2024 can be accessed here.](https://www.opendata.nhs.scot/dataset/f23655c3-6e23-4103-a511-a80d998adb90/resource/54a6e1e3-98a3-4e78-be0d-1e6d6ebdde1d/download/practice_contactdetails_jan2024-open-data.csv)
+
+We are going to start by reading in the data, this will assume that you have put your data in a folder called `Data` within your home directory (if not, you can change the file path to an appropriate location). We are also going to add a polygon for Ayrshire and Arran Health board to emphasise the region that we are focussing on. We will require the same packages as previously, excluding `{ggplot2}` as we are producing interactive maps only.
+
+```{r eval = FALSE}
+library(sf)      # reading in the spatial information
+library(readr)   # reading in data (this may change depending on file type)
+library(dplyr)   # manipulating the data
+library(leaflet) # plotting an interactive map
+```
+
+Then we will load in the shape files, the GP surgery data, and a postcode lookup that will provide us with approximate locations of each practice.
+
+```{r}
+# Read in shape file (Setting up path so that it displays better - not necessary)
+shp <- "/conf/linkage/output/lookups/Unicode/Geography/Shapefiles/Health Board 2019/"
+shape <- read_sf(paste0(shp, "SG_NHS_HealthBoards_2019.shp")) %>% 
+  # Filter out Ayrshire and Arran
+  filter(HBCode == "S08000015") %>% 
+  # convert to lat/long
+  st_transform(4326)
+
+# Read in GP data
+GPs <- read_csv("./Data/practice_contactdetails_jan2024-open-data.csv") %>% 
+  # Filter out Ayrshire and Arran
+  filter(HB == "S08000015")
+# Read in PCs
+PCs <- read_rds("/conf/linkage/output/lookups/Unicode/Geography/Scottish Postcode Directory/Scottish_Postcode_Directory_2024_1.rds")
+# Select relevant columns and rename postcode to match GPs
+PCs <- PCs %>% select(Postcode = pc8, latitude, longitude)
+
+GPs <- GPs %>% left_join(PCs)
+```
+
+When building the map, we start as before by adding the provider tile, and then adding our polygon. Since we will have different layers of data, we'll supply the data to each layer rather than into `leaflet()`
+
+```{r}
+leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(data = shape,
+              fillColor = "black",
+              weight = 1,
+              color = "black")
+```
+
+Then we can start adding our points using `addMarkers()`:
+
+
+```{r}
+leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(data = shape,
+              fillColor = "black",
+              weight = 1,
+              color = "black") %>% 
+  addMarkers(data = GPs,
+             popup = paste(paste0("<b>", GPs$GPPracticeName, "</b>"),
+                           GPs$AddressLine2,
+                           GPs$AddressLine3,
+                           GPs$AddressLine4,
+                           GPs$Postcode,
+                           paste0("Telephone: ", GPs$TelephoneNumber),
+                           sep = "<br>"))
+```
+
+If we want to colour the markers based on a variable in the data set, we have to do an additional step to generate markers of different colours for different points. 
+
+We'll colour the markers by list size, such that:
+
+ - Small means the list size is < 5,000 patients, 
+ - Medium is a list size of 5,000 - 10,000 patients, 
+ - Large is a list size of > 10,000 patients. 
+ 
+We use the function `awesomeIcons()` to set colour, and `addAwesomeMarkers()` to add these. We can set layer control as we did before, in this case using `overlayGroups` as we want multiple groups to be allowed to display at the same time.
+
+```{r}
+# create group and colour columns based on GP cluster size
+GPs <- GPs %>% 
+  mutate(Group = case_when(PracticeListSize < 5000 ~ "Small",
+                           PracticeListSize > 10000 ~ "Large",
+                           .default = "Medium"),
+         Colour = case_when(PracticeListSize < 5000 ~ "green",
+                           PracticeListSize > 10000 ~ "red",
+                           .default = "orange"))
+
+# Generate Icons
+icons <- awesomeIcons(markerColor = GPs$Colour,
+                      icon = "glyphicon-plus")
+
+leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(data = shape,
+              fillColor = "black",
+              weight = 1,
+              color = "black") %>% 
+  addAwesomeMarkers(data = GPs,
+             popup = paste(paste0("<b>", GPs$GPPracticeName, "</b>"),
+                           GPs$AddressLine2,
+                           GPs$AddressLine3,
+                           GPs$AddressLine4,
+                           GPs$Postcode,
+                           paste0("Telephone: ", GPs$TelephoneNumber),
+                           sep = "<br>"),
+             icon = icons,
+             group = GPs$Group) %>% 
+  addLayersControl(overlayGroups = unique(GPs$Group), 
+                   options = list(collapsed = FALSE)) %>% 
+  addLegend(position = "bottomleft", 
+            title = "Practice Size",
+            colors = c("green", "orange", "red"), 
+            labels = c("Small", "Medium", "Large"))
+
+```
