@@ -170,10 +170,11 @@ Finally, let's add another layer containing SIMD decile (column `simd202_10`) pl
 - Group names set within `addPolygons()` for each of quintile and decile
 - A control to toggle between the layers
 
-We do this by setting up a `group` within `addPolygons()`, and then using `addLayersControl()` to add the switch to the plot.
-
+We do this by setting up a `group` within `addPolygons()`, and then using `addLayersControl()` to add the switch to the plot. We use the `baseGroups` argument as we only want to display one of these at a time.
+ 
 ```{r}
 # Process for creating palette is exactly the same, just different column
+
 pal_quin <- colorNumeric("magma", SIMD_map$simd202_11)
 pal_dec <- colorNumeric("magma", SIMD_map$simd202_10)
 
