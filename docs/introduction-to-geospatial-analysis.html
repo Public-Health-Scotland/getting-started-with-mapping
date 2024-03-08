@@ -242,7 +242,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4><span class="header-section-number">2.1.1.2</span> Spatial Point Data<a href="introduction-to-geospatial-analysis.html#spatial-point-data" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Spatial point data can be characterised in two ways depending on what our main focus is.</p>
 <p>When we talk about <em>geostatistical data</em>, this indicates that we are mainly interested in the observation associated with a particular point location, rather than the location itself. An example of this might be weather measurements, where the location is important in building up a picture of the weather over a space, but we are mostly interested in the level of rainfall in a particular location. Usually with this type of data we would be aiming to create a smooth estimate of the measurement across the entire area of interest - so instead of having rainfall at individual weather stations, we would get an estimate of rainfall for all locations in Scotland.</p>
-<p>When we talk about <em>point process data</em>, this indicates that our primary focus is on the location itself. This type of data would be considered where we are interested in the location of services, or the location of cases of a particular disease. <strong>Include John Snow Cholera example?</strong></p>
+<p>When we talk about <em>point process data</em>, this indicates that our primary focus is on the location itself. This type of data would be considered where we are interested in the location of services, or the location of cases of a particular disease. In 1854, John Snow plotted the locations of cases of Cholera in London. By doing this, he demonstrated that Cholera is caused by poor sanitation rather than bad air, as had been previously suspected. This was the first ever spatial analysis performed.</p>
 </div>
 </div>
 <div id="coordinate-reference-systems" class="section level3 hasAnchor" number="2.1.2">
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="mapping-tools" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Mapping Tools<a href="introduction-to-geospatial-analysis.html#mapping-tools" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>There are several tools that can be used to access, manipulate and map spatial data. These range from Graphical Information Systems (GIS), to programming languages such as R and Python when supported by an appropriate spatial package. Power BI also has mapping capabilities, supported by Bing.</p>
-<p>This guide will focus on how to create maps using Posit, supported by the packages <code>{sf}</code> and <code>{ggplot2}</code> for non-interactive maps, and <code>{leaflet}</code> for interactive mapping. <strong>Is this true? - is there anyone else who could do something similar for GIS or Power BI?</strong></p>
+<p>This guide will focus on how to create maps using Posit, supported by the packages <code>{sf}</code> and <code>{ggplot2}</code> for non-interactive maps, and <code>{leaflet}</code> for interactive mapping.</p>
 
 </div>
 </div>

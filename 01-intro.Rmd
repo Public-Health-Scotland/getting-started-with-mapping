@@ -36,7 +36,7 @@ Spatial point data can be characterised in two ways depending on what our main f
 
 When we talk about *geostatistical data*, this indicates that we are mainly interested in the observation associated with a particular point location, rather than the location itself. An example of this might be weather measurements, where the location is important in building up a picture of the weather over a space, but we are mostly interested in the level of rainfall in a particular location. Usually with this type of data we would be aiming to create a smooth estimate of the measurement across the entire area of interest - so instead of having rainfall at individual weather stations, we would get an estimate of rainfall for all locations in Scotland.
 
-When we talk about *point process data*, this indicates that our primary focus is on the location itself. This type of data would be considered where we are interested in the location of services, or the location of cases of a particular disease. **Include John Snow Cholera example?**
+When we talk about *point process data*, this indicates that our primary focus is on the location itself. This type of data would be considered where we are interested in the location of services, or the location of cases of a particular disease. In 1854, John Snow plotted the locations of cases of Cholera in London. By doing this, he demonstrated that Cholera is caused by poor sanitation rather than bad air, as had been previously suspected. This was the first ever spatial analysis performed.
 
 ### Coordinate Reference Systems
 
@@ -52,5 +52,5 @@ It is important to be aware of which coordinate reference system you are using, 
 
 There are several tools that can be used to access, manipulate and map spatial data. These range from Graphical Information Systems (GIS), to programming languages such as R and Python when supported by an appropriate spatial package. Power BI also has mapping capabilities, supported by Bing. 
 
-This guide will focus on how to create maps using Posit, supported by the packages `{sf}` and `{ggplot2}` for non-interactive maps, and `{leaflet}` for interactive mapping. **Is this true? - is there anyone else who could do something similar for GIS or Power BI?**
+This guide will focus on how to create maps using Posit, supported by the packages `{sf}` and `{ggplot2}` for non-interactive maps, and `{leaflet}` for interactive mapping.
 
