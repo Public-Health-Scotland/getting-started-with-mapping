@@ -23,7 +23,7 @@
 <meta name="author" content="Geospatial Cross Team" />
 
 
-<meta name="date" content="2024-03-07" />
+<meta name="date" content="2024-03-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -173,8 +173,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="mapping-examples.html"><a href="mapping-examples.html"><i class="fa fa-check"></i><b>3</b> Mapping Examples</a></li>
 <li class="chapter" data-level="4" data-path="mapping-in-posit.html"><a href="mapping-in-posit.html"><i class="fa fa-check"></i><b>4</b> Mapping in Posit</a>
 <ul>
-<li class="chapter" data-level="4.0.1" data-path="mapping-in-posit.html"><a href="mapping-in-posit.html#required-packages"><i class="fa fa-check"></i><b>4.0.1</b> Required Packages</a></li>
-<li class="chapter" data-level="4.1" data-path="mapping-in-posit.html"><a href="mapping-in-posit.html#setting-up-posit"><i class="fa fa-check"></i><b>4.1</b> Setting up Posit</a></li>
+<li class="chapter" data-level="4.1" data-path="mapping-in-posit.html"><a href="mapping-in-posit.html#required-packages"><i class="fa fa-check"></i><b>4.1</b> Required Packages</a></li>
+<li class="chapter" data-level="4.2" data-path="mapping-in-posit.html"><a href="mapping-in-posit.html#setting-up-posit"><i class="fa fa-check"></i><b>4.2</b> Setting up Posit</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="areal-unit-data-1.html"><a href="areal-unit-data-1.html"><i class="fa fa-check"></i><b>5</b> Areal Unit Data</a>
 <ul>
@@ -183,7 +183,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="areal-unit-data-1.html"><a href="areal-unit-data-1.html#ggplot2"><i class="fa fa-check"></i><b>5.3</b> <code>{ggplot2}</code></a></li>
 <li class="chapter" data-level="5.4" data-path="areal-unit-data-1.html"><a href="areal-unit-data-1.html#leaflet"><i class="fa fa-check"></i><b>5.4</b> <code>{leaflet}</code></a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="spatial-point-maps-in-leaflet.html"><a href="spatial-point-maps-in-leaflet.html"><i class="fa fa-check"></i><b>6</b> Spatial Point Maps in <code>{leaflet}</code></a></li>
+<li class="chapter" data-level="6" data-path="spatial-point-maps-in-leaflet.html"><a href="spatial-point-maps-in-leaflet.html"><i class="fa fa-check"></i><b>6</b> Spatial Point Maps in <code>{leaflet}</code></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="spatial-point-maps-in-leaflet.html"><a href="spatial-point-maps-in-leaflet.html#initial-set-up"><i class="fa fa-check"></i><b>6.1</b> Initial Set-up</a></li>
+<li class="chapter" data-level="6.2" data-path="spatial-point-maps-in-leaflet.html"><a href="spatial-point-maps-in-leaflet.html#building-the-map"><i class="fa fa-check"></i><b>6.2</b> Building the Map</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="spatial-point-maps-in-leaflet.html"><a href="spatial-point-maps-in-leaflet.html#plain-markers-with-pop-ups"><i class="fa fa-check"></i><b>6.2.1</b> Plain Markers with Pop-ups</a></li>
+<li class="chapter" data-level="6.2.2" data-path="spatial-point-maps-in-leaflet.html"><a href="spatial-point-maps-in-leaflet.html#styling-markers-based-on-data"><i class="fa fa-check"></i><b>6.2.2</b> Styling Markers Based on Data</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="helpful-resources.html"><a href="helpful-resources.html"><i class="fa fa-check"></i><b>7</b> Helpful Resources</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -208,8 +216,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="mapping-in-posit" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Mapping in Posit<a href="mapping-in-posit.html#mapping-in-posit" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Mapping in Posit is primarily supported by the <code>{sf}</code> package, which allows geospatial information to be held and interpreted by R functions. Then we can produce static maps using <code>{ggplot2}</code>, or interactive maps using <code>{leaflet}</code>. This guide will give details on how to construct a basic map in leaflet, but this package is very powerful, and can do a lot more.</p>
-<div id="required-packages" class="section level3 hasAnchor" number="4.0.1">
-<h3><span class="header-section-number">4.0.1</span> Required Packages<a href="mapping-in-posit.html#required-packages" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="required-packages" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Required Packages<a href="mapping-in-posit.html#required-packages" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In order to produce maps, you will need the following packages:</p>
 <ul>
 <li><code>{sf}</code></li>
@@ -341,8 +349,8 @@ Show Installation Code - This might be a mistake to include and happy to take op
 </details>
 <p><br></p>
 </div>
-<div id="setting-up-posit" class="section level2 hasAnchor" number="4.1">
-<h2><span class="header-section-number">4.1</span> Setting up Posit<a href="mapping-in-posit.html#setting-up-posit" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="setting-up-posit" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Setting up Posit<a href="mapping-in-posit.html#setting-up-posit" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Any time you are doing work with any of these spatial packages, in a new session, you will need to run code to set the environment variables and load the geospatial libraries. You can do this using the code below (which is a subset of the code used to install the spatial packages!)</p>
 <details>
 <summary>

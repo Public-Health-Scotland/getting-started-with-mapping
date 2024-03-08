@@ -16,4 +16,8 @@ joining-with-data
 ggplot2
 leaflet
 spatial-point-maps-in-leaflet
+initial-set-up
+building-the-map
+plain-markers-with-pop-ups
+styling-markers-based-on-data
 helpful-resources

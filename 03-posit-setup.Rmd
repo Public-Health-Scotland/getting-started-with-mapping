@@ -2,7 +2,7 @@
 
 Mapping in Posit is primarily supported by the `{sf}` package, which allows geospatial information to be held and interpreted by R functions. Then we can produce static maps using `{ggplot2}`, or interactive maps using `{leaflet}`. This guide will give details on how to construct a basic map in leaflet, but this package is very powerful, and can do a lot more. 
 
-### Required Packages
+## Required Packages
 
 In order to produce maps, you will need the following packages:
 
