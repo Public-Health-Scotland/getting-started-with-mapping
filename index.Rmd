@@ -22,4 +22,4 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.path = 
 
 This guide was set up by the LIST Geospatial Cross Team, in order to help individuals get started with spatial mapping. If you have any questions or comments about the contents of this guide, please get in touch with Kate Pyper ([email](mailto:kate.pyper@phs.scot))
 
-This guide is an introduction to mapping using R in Posit Workbench. It covers basic geospatial terminology in Chapter 2, mapping examples in Chapter 3, required packages and setting up Posit in Chapter 4 areal unit mapping in Chapter 5, point mapping in chapter 6, and some useful resources in chapter 7.
+This guide is an introduction to mapping using R in Posit Workbench. It covers basic geospatial terminology in Chapter 2, required packages and setting up Posit in Chapter 3 areal unit mapping in Chapter 4, point mapping in chapter 5, and some useful resources in chapter 6.

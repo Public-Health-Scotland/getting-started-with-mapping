@@ -6,7 +6,6 @@ areal-unit-data
 spatial-point-data
 coordinate-reference-systems
 mapping-tools
-mapping-examples
 mapping-in-posit
 required-packages
 setting-up-posit

@@ -95,7 +95,7 @@ ggplot(SIMD_map) +
 
 ```
 
-Although this map is static, we can use `ggplotly()` to introduce a small amount of interactivity. The column has been renamed to improve the labels, and tooltip has been specified to reduce duplication. There is also a dummy aesthetic `DZ` which allows us to show the data zone name:
+Although this map is static, we can use `ggplotly()` (version >= 4.10.4) to introduce a small amount of interactivity. The column has been renamed to improve the labels, and tooltip has been specified to reduce duplication. There is also a dummy aesthetic `DZ` which allows us to show the data zone name:
 
 ```{r}
 p <- SIMD_map %>% 

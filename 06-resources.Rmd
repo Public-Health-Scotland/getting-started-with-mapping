@@ -1,3 +1,5 @@
 # Helpful Resources
 
+This area is constantly under development - if you have any suggestions for nice mapping resources let us know!
+
 - Duke University Libraries: R Mapping and Geospatial - [https://guides.library.duke.edu/r-geospatial](https://guides.library.duke.edu/r-geospatial)
