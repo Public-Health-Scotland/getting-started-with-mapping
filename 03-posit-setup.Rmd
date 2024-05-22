@@ -14,11 +14,24 @@ In order to produce maps, you will need the following packages:
 
 For the purposes of mapping, the last three packages are used to support `{leaflet}` and `{sf}` (although they are spatial packages in their own right). Usually you do not need to load these directly. 
 
-Full details on how to install these packages initially can be found on the page [How to Install and Use Geospatial R Packages](https://public-health-scotland.github.io/knowledge-base/docs/Posit%20Infrastructure?doc=How%20to%20Install%20and%20Use%20Geospatial%20R%20Packages.md) on the [Data Science Knowledge Base](https://public-health-scotland.github.io/knowledge-base/). We would recommend installing these packages now, so that you don't have to worry about getting set up when you need to produce a map.
+Full details on how to install these packages initially can be found on the [Data Science Knowledge Base](https://public-health-scotland.github.io/knowledge-base/). To get the Geopspatial packages installed, you should follow the instructions linked below:
+
+[How to Install and Use Geospatial R Packages](https://public-health-scotland.github.io/knowledge-base/docs/Posit%20Infrastructure?doc=How%20to%20Install%20and%20Use%20Geospatial%20R%20Packages.md)
 
 ## Setting up Posit
 
-Any time you are doing work with any of these spatial packages, in a new session, you will need to run code to set the environment variables and load the geospatial libraries. You can do this using the code below (which is a subset of the code used to install the spatial packages!) 
+Any time you are doing work with any of these spatial packages, in a new session, you will need to run code to set the environment variables and load the geospatial libraries. *If you don't run this code prior to loading spatial packages, your Posit session will abort.* The easiest way to do this is to set the code to run as part of your `.Rprofile` file on Posit Workbench.  
+
+You can edit your user wide `.Rprofile` file by running the following:
+
+```{r eval = FALSE}
+# install the {usethis} package if you haven't already
+# install.packages("usethis")
+
+usethis::edit_r_profile()
+```
+
+This will open a script window where you can copy and paste the set up code below. 
 
 <details>
   <summary>Show Initialisation Code</summary>
@@ -55,17 +68,8 @@ dyn.load("/usr/geos310/lib64/libgeos_c.so", local = FALSE)
 
 </details>
 
- *If you don't run this code prior to loading spatial packages, your Posit session will abort.*
+<br>
 
-This code should be entered into your `.Rprofile` file on Posit Workbench, which means that it will automatically run when you open a session. You can edit your user wide `.Rprofile` file, which will apply to all of your Posit sessions by running the following:
-
-```{r eval = FALSE}
-# install the {usethis} package if you haven't already
-# install.packages("usethis")
-
-usethis::edit_r_profile()
-```
-
-This will open a script window where you can copy and paste the set up code. Note that if you use projects and set up a `.Rprofile` for your project specifically, you will also need to include the code in that file if you are doing something spatial.
+Note that if you use projects and set up a `.Rprofile` for your project specifically, you will also need to include the code in that file if you are doing something spatial.
 
 
