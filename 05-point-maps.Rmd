@@ -32,7 +32,7 @@ GPs <- read_csv("./Data/practice_contactdetails_jan2024-open-data.csv") %>%
   filter(HB == "S08000015")
 
 # Read in Postcode lookup
-PCs <- read_rds("/conf/linkage/output/lookups/Unicode/Geography/Scottish Postcode Directory/Scottish_Postcode_Directory_2024_1.rds")
+PCs <- read_rds("/conf/linkage/output/lookups/Unicode/Geography/Scottish Postcode Directory/Archive/Scottish_Postcode_Directory_2024_1.rds")
 
 # Select relevant columns and rename postcode to match GPs
 PCs <- PCs %>% select(Postcode = pc8, latitude, longitude)
