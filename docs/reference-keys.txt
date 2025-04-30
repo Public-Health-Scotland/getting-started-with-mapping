@@ -8,7 +8,6 @@ coordinate-reference-systems
 mapping-tools
 mapping-in-posit
 required-packages
-setting-up-posit
 areal-unit-data-1
 reading-in-shapefiles
 joining-with-data
